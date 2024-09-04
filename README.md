@@ -29,6 +29,8 @@ To get started with the Rust CLI Utilities, follow these steps:
    ```bash
    git clone https://github.com/your-username/rust-cli-utilities.git
    cd rust-cli-utilities
+   // choose your r-utility
+   cd r-utility
    ```
 
 2. **Build the Project:**
@@ -46,10 +48,11 @@ To make the CLI tools accessible from anywhere, add the path to the `target/rele
 #### Temporary Addition (Current Terminal Session Only)
 
 ```bash
-export PATH=$PATH:/path/to/rust-cli-utilities/target/release
+export PATH=$PATH:/path/to/rust-cli-utilities/r-utility/target/release
 ```
 
-Replace `/path/to/rust-cli-utilities` with the path to your project directory.
+Replace `/path/to/rust-cli-utilities/r-utility`
+with the path to your project directory.
 
 #### Permanent Addition (All Terminal Sessions)
 
@@ -78,7 +81,7 @@ Replace `/path/to/rust-cli-utilities` with the path to your project directory.
    Append the following line to the end of the file:
 
    ```bash
-   export PATH=$PATH:/path/to/rust-cli-utilities/target/release
+   export PATH=$PATH:/path/to/rust-cli-utilities/r-utility/target/release
    ```
 
 4. **Apply the Changes:**
@@ -99,10 +102,6 @@ Replace `/path/to/rust-cli-utilities` with the path to your project directory.
 
 After building the project and adding the binaries to your `PATH`, you can use the CLI tools from any terminal session.
 
-### Example Commands
-
-- **`echo`:** A simple command to print text to the console.
-- **`ls`:** Lists files and directories.
 
 For a list of available commands and their usage, refer to the specific documentation for each tool.
 
