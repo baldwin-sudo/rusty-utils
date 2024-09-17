@@ -1,0 +1,15 @@
+[package]
+name = "r-credentials-manager"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aes = "0.8"
+block-modes = "0.8"
+hex = "0.4"
+hex-literal = "0.3"
+hmac = "0.12"
+pbkdf2 = "0.12"
+rand = "0.8.5"
+rusqlite = "0.32.1"
+sha2 = "0.10"

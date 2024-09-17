@@ -8,6 +8,7 @@ use rusqlite::{self};
 use std::env;
 use std::fs;
 use std::path::Path;
+use std::process::Command;
 use std::{io, process::exit};
 enum Action {
     Add,
@@ -93,6 +94,7 @@ fn main_loop(db: Database) -> ! {
                 if let Ok(valid_task) = Task::create_task() {
                     println!("--Creating Task :--");
                     db.insert_task(valid_task);
+                    clear_terminal();
                     println!("Task added successfully.");
                 } else {
                     println!("Error adding task...");
@@ -122,6 +124,7 @@ fn main_loop(db: Database) -> ! {
                 println!("Task '{}' removed successfully (if it existed).", task_name);
             }
             Ok(Action::Display) => {
+                clear_terminal();
                 println!("Displaying TODO list...");
                 let todolist = db.select_all_tasks().unwrap_or_default();
                 // pretty table :
@@ -148,6 +151,7 @@ fn main_loop(db: Database) -> ! {
             }
             Ok(Action::Quit) => {
                 println!("Quitting...");
+                clear_terminal();
                 exit(0);
             }
             Err(e) => {
@@ -182,4 +186,11 @@ fn display_menu() -> Result<Action, io::Error> {
             "ERROR READING ACTION!",
         )),
     }
+}
+fn clear_terminal() {
+    let os = env::consts::OS;
+    match os {
+        "windows" => Command::new("cmd").args(&["/C", "cls"]).status().unwrap(),
+        _ => Command::new("clear").status().unwrap(),
+    };
 }
