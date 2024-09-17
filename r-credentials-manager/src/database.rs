@@ -2,14 +2,9 @@ use rusqlite::{params, Connection, Result};
 use std::error::Error;
 
 const TABLE_NAME: &str = "credentials";
+const CEASAR_SHIFT: u8 = 15;
 include!("./utils.rs");
-
-pub struct Credential {
-    pub id: String,
-    pub username: String,
-    pub usage_desc: String,
-    pub password: String,
-}
+include!("./credentials.rs");
 
 pub struct Database {
     conn: Connection,
@@ -85,7 +80,7 @@ impl Database {
     pub fn insert_creds(
         &self,
         credential: Credential,
-        keyword: String,
+        keyword: &String,
     ) -> Result<bool, Box<dyn Error>> {
         let query = "
         INSERT INTO credentials (usage_desc, username, encrypted_password) VALUES (?1, ?2, ?3);
@@ -96,16 +91,30 @@ impl Database {
             params![
                 credential.usage_desc,
                 credential.username,
-                vigenere_encrypt(&credential.password, &keyword)
+                ceasar_encrypt(&credential.password, CEASAR_SHIFT)
             ],
         )?;
 
         Ok(rows_affected > 0)
     }
-
+    pub fn select_one_cred(&self, id: String) -> Result<Credential, Box<dyn Error>> {
+        let stmt = self.conn.query_row(
+            "Select * from credentials where id=?1",
+            params![id.trim().parse::<u16>().unwrap()],
+            |row| {
+                Ok(Credential {
+                    id: row.get::<_, u16>(0)?.to_string(),
+                    usage_desc: row.get::<_, String>(1)?,
+                    username: row.get::<_, String>(2)?,
+                    password: ceasar_decrypt(&row.get::<_, String>(3)?, CEASAR_SHIFT),
+                })
+            },
+        )?;
+        return Ok(stmt);
+    }
     pub fn select_all_creds_all_info(
         &self,
-        keyword: String,
+        keyword: &String,
     ) -> Result<Vec<Credential>, Box<dyn Error>> {
         let query = "SELECT * FROM credentials";
         let mut stmt = self.conn.prepare(query)?;
@@ -115,7 +124,7 @@ impl Database {
                 id: String::from(row.get::<_, u16>(0)?.to_string()),
                 usage_desc: row.get(1)?,
                 username: row.get(2)?,
-                password: vigenere_decrypt(&row.get::<_, String>(3)?, &keyword),
+                password: ceasar_decrypt(&row.get::<_, String>(3)?, CEASAR_SHIFT),
             })
         })?;
 
@@ -148,7 +157,7 @@ impl Database {
                 id: row.get::<_, String>(0)?,
                 usage_desc: row.get::<_, String>(1)?,
                 username: row.get::<_, String>(2)?,
-                password: vigenere_decrypt(&row.get::<_, String>(3)?, &keyword),
+                password: ceasar_decrypt(&row.get::<_, String>(3)?, CEASAR_SHIFT),
             })
         })?;
 

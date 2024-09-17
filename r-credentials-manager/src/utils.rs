@@ -2,6 +2,13 @@ use hex::ToHex;
 use hmac::Hmac;
 use pbkdf2::pbkdf2;
 
+pub(crate) enum Action {
+    ADD,
+    REMOVE,
+    DISPLAY,
+    QUIT,
+    GETInfo,
+}
 use sha2::{Digest, Sha256};
 pub fn derive_key_from_master(master_password: String, salt: String) -> [u8; 16] {
     let mut buf = [0u8; 16];

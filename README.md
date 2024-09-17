@@ -13,6 +13,7 @@ Welcome to the Rust CLI Utilities project! This repository contains a collection
 - **r-todolist**(dev-v0.1) :r-todolist is a command-line tool for managing tasks and to-do lists, powered by SQLite for serverless database persistence.
 - **r-echo**(dev): echo in rust .
 - **r-vim**(dev): vim minimal clone in rust .
+- **r-credentials-manager**(dev): r-credentials-manager  is a command-line tool for managing credentials(usernames and their password) , powered by SQLite for serverless database persistence , credentials are encrypted in the database , you need a master key that unlocks them ,further explanation in future ...
 
 ## Getting Started
 
